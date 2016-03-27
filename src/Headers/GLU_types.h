@@ -257,6 +257,18 @@ struct u1_info {
 } ;
 
 /**
+   @struct gaugeflow_info
+   @brief information on when to measure along flow.
+
+   @param nmeas :: the number of times to measure
+   @param meassteps :: the iteration counts to measure at, -1 delimited
+ */
+struct gaugeflow_info {
+  size_t nmeas;
+  size_t meassteps[ 256 ];
+} ;
+
+/**
    @struct infile_data 
    @brief one struct to rule them all 
  */
