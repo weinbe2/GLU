@@ -120,7 +120,8 @@ typedef enum
     MODE_GF ,
     MODE_CUTS ,
     MODE_SMEARING ,
-    MODE_CROSS_U1 } GLU_mode ;
+    MODE_CROSS_U1 ,
+    MODE_GAUGE_FLOW } GLU_mode ;
 
 /**
    @enum smearing_types

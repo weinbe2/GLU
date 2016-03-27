@@ -746,7 +746,6 @@ with_gsl
 with_lapacke
 with_deriv
 enable_exp_exact
-enable_fastsmear
 enable_notcondor
 with_GRACEY_PROJ
 with_IMPROVED_C0
@@ -757,6 +756,7 @@ enable_verbiage
 enable_ascii_check
 enable_GLU_bgq
 enable_GIVENS_APE
+enable_PLAQUETTE_FMUNU
 enable_CLOVER_IMPROVE
 with_CLOVER_K5
 with_TOP_VALUE
@@ -1397,12 +1397,12 @@ Optional Features:
  --enable-single Have our links in single or double precision
  --enable-OMP_FFTW Utilise FFTW's OpenMP parallel FFTs
  --enable-exp_exact Exact exponentiation into the group for the gauge fixing
- --enable-fastsmear Turn on numerically unstable fast smearing routines
  --enable-notcondor Allows for the saving of FFT plans and some simple hashing and whatever
  --enable-verbiage
  --enable-ascii_check
  --enable-GLU_bgq
  --enable-GIVENS_APE
+ --enable-PLAQUETTE_FMUNU
  --enable-CLOVER_IMPROVE
  --enable-GLU_GFIX_SD
  --enable-OVERRELAXED_GF
@@ -4822,6 +4822,21 @@ fi
 done
 
 
+## check for immintrin.h -> Intel vector instructions
+for ac_header in immintrin.h
+do :
+  ac_fn_c_check_header_mongrel "$LINENO" "immintrin.h" "ac_cv_header_immintrin_h" "$ac_includes_default"
+if test "x$ac_cv_header_immintrin_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_IMMINTRIN_H 1
+_ACEOF
+ { $as_echo "$as_me:${as_lineno-$LINENO}: Vector intrinsics being used" >&5
+$as_echo "$as_me: Vector intrinsics being used" >&6;}
+fi
+
+done
+
+
 ## And we can now run in single precision
 single=false
 # Check whether --enable-single was given.
@@ -5166,7 +5181,7 @@ $as_echo "$as_me: Default deriv : Linear deriv with O(a) approx exponentiation (
 fi
 
 
-## Definitions for the fastsmearing default is the slow(stable) one
+## Use exact exponential in the GF
 # Check whether --enable-exp_exact was given.
 if test "${enable_exp_exact+set}" = set; then :
   enableval=$enable_exp_exact; case "${enableval}" in
@@ -5177,23 +5192,6 @@ $as_echo "#define exp_exact /**/" >>confdefs.h
 
 	     ;;
 	*) as_fn_error $? "bad value ${enableval} for --enable-exp_exact" "$LINENO" 5 ;;
-	esac
-fi
-
-
-## Definitions for the fastsmearing default is the slow(stable) one
-# Check whether --enable-fastsmear was given.
-if test "${enable_fastsmear+set}" = set; then :
-  enableval=$enable_fastsmear; case "${enableval}" in
-	yes) { $as_echo "$as_me:${as_lineno-$LINENO}: fast and unstable routines enabled" >&5
-$as_echo "$as_me: fast and unstable routines enabled" >&6;}
-
-$as_echo "#define FAST_SMEAR /**/" >>confdefs.h
-
-	     ;;
-	no) { $as_echo "$as_me:${as_lineno-$LINENO}: default stable smearing routines used" >&5
-$as_echo "$as_me: default stable smearing routines used" >&6;} ;;
-	*) as_fn_error $? "bad value ${enableval} for --enable-fastsmear" "$LINENO" 5 ;;
 	esac
 fi
 
@@ -5395,6 +5393,22 @@ $as_echo "#define GIVENS_APE /**/" >>confdefs.h
 
 	     ;;
 	*) as_fn_error $? "bad value ${enableval} for --enable-GIVENS_APE" "$LINENO" 5 ;;
+	esac
+
+fi
+
+
+## plaquette field strength tensor
+# Check whether --enable-PLAQUETTE_FMUNU was given.
+if test "${enable_PLAQUETTE_FMUNU+set}" = set; then :
+  enableval=$enable_PLAQUETTE_FMUNU; case "${enableval}" in
+	yes) { $as_echo "$as_me:${as_lineno-$LINENO}: Simple plaquette definition of the field strength tensor." >&5
+$as_echo "$as_me: Simple plaquette definition of the field strength tensor." >&6;}
+
+$as_echo "#define PLAQUETTE_FMUNU /**/" >>confdefs.h
+
+	     ;;
+	*) as_fn_error $? "bad value ${enableval} for --enable-PLAQUETTE_FMUNU" "$LINENO" 5 ;;
 	esac
 
 fi

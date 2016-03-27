@@ -265,6 +265,7 @@ struct infile_data {
   struct cut_info CUTINFO ;
   struct sm_info SMINFO ;
   struct u1_info U1INFO ;
+  struct gaugeflow_info GAUGEFLOWINFO;
   header_mode head ;
   GLU_mode mode ;
   GLU_bool rtrans ;
