@@ -34,6 +34,7 @@
 #include "read_config.h"    // read the binary configuration and check
 #include "Scidac.h"         // for the SCIDAC checksums
 #include "SM_wrap.h"        // wrap the smearing functions
+#include "GAUGEFLOW_wrap.h" // wrap the gauge flowing functions
 #include "SUNCxU1_config.h" // compute SU(NC)xU(1) link matrices
 #include "taylor_logs.h"    // Taylor series brute force logarithm
 #include "writers.h"        // write out a configuration
@@ -257,6 +258,32 @@ read_and_smear( const char *infile ,
   free( lat ) ;
   return GLU_SUCCESS ;
 }
+
+// measuring along Wilson flow
+int
+read_and_gauge_flow( const char *infile,
+                     const GLU_bool rtrans ,
+                     const struct gaugeflow_info GAUGEFLOWINFO ,
+                     const struct sm_info SMINFO )
+{
+  // Only supports non-adaptive flow. 
+  if (!( SMINFO.type == SM_WFLOW_LOG || SMINFO.type == SM_WFLOW_STOUT )) {
+    fprintf( stderr, "Mode GAUGEFLOW only supports non-adaptive Wilson flow for smearing.\n");
+    return GLU_FAILURE ;
+  }
+
+  struct head_data HEAD_DATA ;
+  struct site *lat = read_file( &HEAD_DATA , infile ) ;
+
+  // should print out a warning
+  if( lat == NULL ) return GLU_FAILURE ;
+  
+  GAUGEFLOW_wrap_struct( lat , GAUGEFLOWINFO , SMINFO ) ;
+
+  free( lat ) ;
+  return GLU_SUCCESS ;
+}
+
 
 // U1 the links
 int

@@ -186,6 +186,8 @@ get_mode( GLU_mode *mode )
       *mode = MODE_SMEARING ;
     } else if( are_equal( INPUT[mode_idx].VALUE , "SUNCxU1" ) ) {
       *mode = MODE_CROSS_U1 ;
+    } else if( are_equal( INPUT[mode_idx].VALUE , "GAUGEFLOW" ) ) {
+      *mode = MODE_GAUGE_FLOW ; 
     } else {
       *mode = MODE_REWRITE ;
     }
@@ -505,6 +507,8 @@ read_gaugeflow_struct( struct gaugeflow_info *GAUGEFLOWINFO )
       GAUGEFLOWINFO -> type = GFLOW_SYMME ;
     } else if( are_equal( INPUT[type_idx].VALUE , "TOPO" ) ) {
       GAUGEFLOWINFO -> type = GFLOW_TOPO ;
+    } else if( are_equal( INPUT[type_idx].VALUE , "POLYAKOV" ) ) {
+      GAUGEFLOWINFO -> type = GFLOW_POLYAKOV ;
     } else {
       fprintf( stderr , "[IO] Unrecognised Type [%s] "
 	       "Defaulting to No gauge flow measurements.\n" , INPUT[type_idx].VALUE ) ;

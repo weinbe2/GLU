@@ -128,6 +128,21 @@ read_and_smear( const char *infile ,
 		const char *output_details ) ;
 
 /**
+   @fn int read_and_gauge_flow( const char *infile, const GLU_bool rtrans ,  const struct gaugeflow_info GAUGEFLOWINFO , const struct sm_info SMINFO ); 
+   @brief reads a configuration file, performs measurements at specific steps along wilson flow.
+   @param infile :: input configuration name
+   @param rtrans :: do we want to randomly transform the initial configuration
+   @param GAUGEFLOWINGO :: information about what measurement to perform at what wilson flow steps.
+   @param SMINFO :: smearing transformations can be used in smeared gauge fixing
+   @return #GLU_SUCCESS or #GLU_FAILURE
+ */
+int
+read_and_gauge_flow( const char *infile, 
+                     const GLU_bool rtrans ,
+                     const struct gaugeflow_info GAUGEFLOWINFO , 
+                     const struct sm_info SMINFO );
+
+/**
    @fn int read_and_U1( const char *infile , const GLU_bool rtrans , const struct u1_info U1INFO , const char *outfile , const GLU_output storage , const char *output_details )
    @brief reads in a configuration file, creates a quenched SU(N)xU(1) configuration and perhaps writes it out
    @param infile :: input configuration name

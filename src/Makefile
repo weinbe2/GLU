@@ -185,8 +185,10 @@ am__objects_9 = ./Utils/GLU_bswap.$(OBJEXT) \
 	./Utils/MWC_4096.$(OBJEXT) ./Utils/well_rng_19937a.$(OBJEXT) \
 	./Utils/GLU_malloc.$(OBJEXT) ./Utils/GLU_sums.$(OBJEXT)
 am__objects_10 = ./Wrappers/CUT_wrap.$(OBJEXT) \
-	./Wrappers/GF_wrap.$(OBJEXT) ./Wrappers/GLUlib_wrap.$(OBJEXT) \
-	./Wrappers/OBS_wrap.$(OBJEXT) ./Wrappers/SM_wrap.$(OBJEXT)
+	./Wrappers/GF_wrap.$(OBJEXT) \
+	./Wrappers/GAUGEFLOW_wrap.$(OBJEXT) \
+	./Wrappers/GLUlib_wrap.$(OBJEXT) ./Wrappers/OBS_wrap.$(OBJEXT) \
+	./Wrappers/SM_wrap.$(OBJEXT)
 am_libGLU_a_OBJECTS = $(am__objects_1) $(am__objects_2) \
 	$(am__objects_3) $(am__objects_4) $(am__objects_5) \
 	$(am__objects_6) $(am__objects_7) $(am__objects_8) \
@@ -405,8 +407,8 @@ UTILSFILES = ./Utils/GLU_bswap.c ./Utils/GLU_memcheck.c ./Utils/GLU_rng.c \
 	./Utils/MWC_1038.c ./Utils/MWC_4096.c \
 	./Utils/well_rng_19937a.c ./Utils/GLU_malloc.c ./Utils/GLU_sums.c
 
-WRAPPERSFILES = ./Wrappers/CUT_wrap.c ./Wrappers/GF_wrap.c \
-	./Wrappers/GLUlib_wrap.c ./Wrappers/OBS_wrap.c ./Wrappers/SM_wrap.c
+WRAPPERSFILES = ./Wrappers/CUT_wrap.c ./Wrappers/GF_wrap.c ./Wrappers/GAUGEFLOW_wrap.c \
+	./Wrappers/GLUlib_wrap.c ./Wrappers/OBS_wrap.c ./Wrappers/SM_wrap.c 
 
 libGLU_a_SOURCES = \
 	${CUTSFILES} \
@@ -727,6 +729,8 @@ Wrappers/$(DEPDIR)/$(am__dirstamp):
 	Wrappers/$(DEPDIR)/$(am__dirstamp)
 ./Wrappers/GF_wrap.$(OBJEXT): Wrappers/$(am__dirstamp) \
 	Wrappers/$(DEPDIR)/$(am__dirstamp)
+./Wrappers/GAUGEFLOW_wrap.$(OBJEXT): Wrappers/$(am__dirstamp) \
+	Wrappers/$(DEPDIR)/$(am__dirstamp)
 ./Wrappers/GLUlib_wrap.$(OBJEXT): Wrappers/$(am__dirstamp) \
 	Wrappers/$(DEPDIR)/$(am__dirstamp)
 ./Wrappers/OBS_wrap.$(OBJEXT): Wrappers/$(am__dirstamp) \
@@ -901,6 +905,7 @@ include ./Utils/$(DEPDIR)/MWC_1038.Po
 include ./Utils/$(DEPDIR)/MWC_4096.Po
 include ./Utils/$(DEPDIR)/well_rng_19937a.Po
 include ./Wrappers/$(DEPDIR)/CUT_wrap.Po
+include ./Wrappers/$(DEPDIR)/GAUGEFLOW_wrap.Po
 include ./Wrappers/$(DEPDIR)/GF_wrap.Po
 include ./Wrappers/$(DEPDIR)/GLUlib_wrap.Po
 include ./Wrappers/$(DEPDIR)/OBS_wrap.Po

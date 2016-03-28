@@ -63,8 +63,8 @@ UTILSFILES=./Utils/GLU_bswap.c ./Utils/GLU_memcheck.c ./Utils/GLU_rng.c \
 	./Utils/well_rng_19937a.c ./Utils/GLU_malloc.c ./Utils/GLU_sums.c
 
 ## wrapper files
-WRAPPERSFILES=./Wrappers/CUT_wrap.c ./Wrappers/GF_wrap.c \
-	./Wrappers/GLUlib_wrap.c ./Wrappers/OBS_wrap.c ./Wrappers/SM_wrap.c
+WRAPPERSFILES=./Wrappers/CUT_wrap.c ./Wrappers/GF_wrap.c ./Wrappers/GAUGEFLOW_wrap.c \
+	./Wrappers/GLUlib_wrap.c ./Wrappers/OBS_wrap.c ./Wrappers/SM_wrap.c 
 
 ## all the source files apart from ./Run/Mainfile.c
 libGLU_a_SOURCES = \

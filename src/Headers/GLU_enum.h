@@ -151,7 +151,8 @@ typedef enum
   { GFLOW_NONE , 
     GFLOW_ALL , 
     GFLOW_SYMME , 
-    GFLOW_TOPO } gaugeflow_types ; 
+    GFLOW_TOPO , 
+    GFLOW_POLYAKOV } gaugeflow_types ; 
 
 /**
    @enum cut_mode

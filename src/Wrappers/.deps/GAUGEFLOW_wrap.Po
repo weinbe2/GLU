@@ -1,6 +1,7 @@
-Wrappers/GLUlib_wrap.o: Wrappers/GLUlib_wrap.c /usr/include/stdc-predef.h \
- ../src/Headers/Mainfile.h ../config.h /usr/include/stdio.h \
- /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+Wrappers/GAUGEFLOW_wrap.o: Wrappers/GAUGEFLOW_wrap.c \
+ /usr/include/stdc-predef.h ../src/Headers/Mainfile.h ../config.h \
+ /usr/include/stdio.h /usr/include/features.h \
+ /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
@@ -51,14 +52,8 @@ Wrappers/GLUlib_wrap.o: Wrappers/GLUlib_wrap.c /usr/include/stdc-predef.h \
  ../src/Headers/MMUL_dag.h ../src/Headers/MMULdag.h \
  ../src/Headers/MMULdagdag.h ../src/Headers/exactQ.h \
  ../src/Headers/expMat.h ../src/Headers/GLU_malloc.h \
- ../src/Headers/CUT_wrap.h ../src/Headers/geometry.h \
- ../src/Headers/GLU_memcheck.h ../src/Headers/GF_wrap.h \
- ../src/Headers/GLU_rng.h ../src/Headers/OBS_wrap.h \
- ../src/Headers/random_config.h ../src/Headers/read_headers.h \
- ../src/Headers/read_config.h ../src/Headers/Scidac.h \
- ../src/Headers/SM_wrap.h ../src/Headers/GAUGEFLOW_wrap.h \
- ../src/Headers/SUNCxU1_config.h ../src/Headers/taylor_logs.h \
- ../src/Headers/writers.h ../src/Headers/givens.h
+ ../src/Headers/GAUGEFLOW_wrap.h ../src/Headers/GLU_timer.h \
+ ../src/Headers/POLY.h ../src/Headers/Qsusc.h ../src/Headers/SM_wrap.h
 
 /usr/include/stdc-predef.h:
 
@@ -208,34 +203,12 @@ Wrappers/GLUlib_wrap.o: Wrappers/GLUlib_wrap.c /usr/include/stdc-predef.h \
 
 ../src/Headers/GLU_malloc.h:
 
-../src/Headers/CUT_wrap.h:
-
-../src/Headers/geometry.h:
-
-../src/Headers/GLU_memcheck.h:
-
-../src/Headers/GF_wrap.h:
-
-../src/Headers/GLU_rng.h:
-
-../src/Headers/OBS_wrap.h:
-
-../src/Headers/random_config.h:
-
-../src/Headers/read_headers.h:
-
-../src/Headers/read_config.h:
-
-../src/Headers/Scidac.h:
-
-../src/Headers/SM_wrap.h:
-
 ../src/Headers/GAUGEFLOW_wrap.h:
 
-../src/Headers/SUNCxU1_config.h:
+../src/Headers/GLU_timer.h:
 
-../src/Headers/taylor_logs.h:
+../src/Headers/POLY.h:
 
-../src/Headers/writers.h:
+../src/Headers/Qsusc.h:
 
-../src/Headers/givens.h:
+../src/Headers/SM_wrap.h:
