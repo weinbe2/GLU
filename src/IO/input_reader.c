@@ -32,7 +32,7 @@
 #define GLU_STR_LENGTH 2096
 
 // maximum number of tokens
-#define INPUTS_LENGTH 40
+#define INPUTS_LENGTH 50
 
 // tokenize the input file
 struct inputs {
@@ -524,33 +524,33 @@ read_gaugeflow_struct( struct gaugeflow_info *GAUGEFLOWINFO )
   // Can't be more than 255.
   {
     const int meassteps_idx = tag_search( "MEASSTEPS" ) ;
-    if( type_idx == GLU_FAILURE ) { return tag_failure( " MEASSTEPS " ) ; }
+    if( meassteps_idx == GLU_FAILURE ) { return tag_failure( " MEASSTEPS " ) ; }
     // Use strtok to pull out integers.
     char *pch;
     char *endptr;
     errno = 0;
     int counter = 0 ; 
-    pch = strtok( INPUT[meassteps_idx].VALUE, " " ) ; 
+    pch = strtok( INPUT[meassteps_idx].VALUE, "," ) ; 
     while ( pch != NULL ) {
       if ( counter+1 > GAUGEFLOWINFO -> nmeas || counter == 255 ) {
-        fprintf( stderr, "[IO] Too many measurement steps provided [%zu] "
+        fprintf( stderr, "[IO] Too many measurement steps provided [%d] "
                           "Truncating additional measurements.\n", counter+1 ) ;
         pch = NULL ;
       } else {
-        GAUGEFLOWINFO -> nmeassteps[counter++] = (size_t)strtol( pch, &endptr , 10 ) ;
-        if ( endptr == INPUT[idx].VALUE || errno = ERANGE ) {
+        GAUGEFLOWINFO -> meassteps[counter++] = (size_t)strtol( pch, &endptr , 10 ) ;
+        if ( endptr == INPUT[meassteps_idx].VALUE || errno == ERANGE ) {
           return GLU_FAILURE ; 
         }
-        pch = strtok( NULL, " ") ;
+        pch = strtok( NULL, ",") ;
       }
     }
     if ( counter != GAUGEFLOWINFO -> nmeas ) {
-      fprintf( stderr, "[IO] Number of measurement steps not what was expected [%zu] "
+      fprintf( stderr, "[IO] Number of measurement steps not what was expected [%d] "
                        "Modifying nmeas appropriately.\n", counter ) ;
       GAUGEFLOWINFO -> nmeas = counter;
     }
     // Set -1 delimiter.
-    GAUGEFLOWINFO -> nmeassteps[counter] = -1;
+    GAUGEFLOWINFO -> meassteps[counter] = -1;
   }
   return GLU_SUCCESS ;
 }
@@ -641,6 +641,7 @@ get_input_data( struct infile_data *INFILE ,
   }
 
   // if we can open the file we push it into a big structure
+  printf("About to pack inputs.\n");
   pack_inputs( infile ) ;
 
   int INPUT_FAILS = 0 ; // counter for the number of failures
