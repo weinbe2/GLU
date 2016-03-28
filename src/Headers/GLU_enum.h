@@ -141,6 +141,18 @@ typedef enum
     SM_ADAPTWFLOW_STOUT , 
     SM_ADAPTWFLOW_LOG } smearing_types ;
 
+
+/**
+   @enum gaugeflow_types
+   @brief available measurements along Wilson flow
+   prepended with GFLOW to avoid clashes
+ */
+typedef enum 
+  { GFLOW_NONE , 
+    GFLOW_ALL , 
+    GFLOW_SYMME , 
+    GFLOW_TOPO } gaugeflow_types ; 
+
 /**
    @enum cut_mode
    @brief available cutting modes

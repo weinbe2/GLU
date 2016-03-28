@@ -260,10 +260,12 @@ struct u1_info {
    @struct gaugeflow_info
    @brief information on when to measure along flow.
 
+   @param type :: the type of gaugeflow measurement to perform
    @param nmeas :: the number of times to measure
    @param meassteps :: the iteration counts to measure at, -1 delimited
  */
 struct gaugeflow_info {
+  gaugeflow_types type;
   size_t nmeas;
   size_t meassteps[ 256 ];
 } ;

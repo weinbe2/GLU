@@ -59,7 +59,7 @@
 #define HAVE_OMP_H 1
 
 /* Look for where we prefix to */
-#define HAVE_PREFIX "/home/weinbe2/Documents/GLU/install"
+#define HAVE_PREFIX "/home/weinbe2/bin/GLU/install_omp"
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1

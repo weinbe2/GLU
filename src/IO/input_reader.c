@@ -28,11 +28,11 @@
 #include <errno.h>
 #include "GLU_rng.h"  // we initialise the RNG from the input file
 
-// we might want to change this at some point
-#define GLU_STR_LENGTH 64
+// we might want to change this at some point... so Evan will!
+#define GLU_STR_LENGTH 2096
 
 // maximum number of tokens
-#define INPUTS_LENGTH 36
+#define INPUTS_LENGTH 40
 
 // tokenize the input file
 struct inputs {
@@ -488,6 +488,73 @@ read_suNC_x_U1( struct u1_info *U1INFO )
   return GLU_SUCCESS ;
 }
 
+
+// pack the gaugeflow_info struct
+static int
+read_gaugeflow_struct( struct gaugeflow_info *GAUGEFLOWINFO )
+{
+  // find the smeartype index
+  {
+    const int type_idx = tag_search( "GAUGEFLOWTYPE" ) ;
+    if( type_idx == GLU_FAILURE ) { return tag_failure( "GAUGEFLOWTYPE" ) ; }
+    if( are_equal( INPUT[type_idx].VALUE , "NONE" ) ) { 
+      GAUGEFLOWINFO -> type = GFLOW_NONE ;
+    } else if( are_equal( INPUT[type_idx].VALUE , "ALL" ) ) {
+      GAUGEFLOWINFO -> type = GFLOW_ALL ;
+    } else if( are_equal( INPUT[type_idx].VALUE , "SYMME" ) ) {
+      GAUGEFLOWINFO -> type = GFLOW_SYMME ;
+    } else if( are_equal( INPUT[type_idx].VALUE , "TOPO" ) ) {
+      GAUGEFLOWINFO -> type = GFLOW_TOPO ;
+    } else {
+      fprintf( stderr , "[IO] Unrecognised Type [%s] "
+	       "Defaulting to No gauge flow measurements.\n" , INPUT[type_idx].VALUE ) ;
+      GAUGEFLOWINFO -> type = GFLOW_NONE ;
+    }
+  }
+  // find the number of measurements
+  if( setint( &( GAUGEFLOWINFO -> nmeas ) , "NMEAS" ) == GLU_FAILURE ) {
+    return GLU_FAILURE ;
+  }
+  if ( GAUGEFLOWINFO -> nmeas > 255 ) {
+    fprintf( stderr , "[IO] Too many flow measurement times [%zu] "
+                      "Defaulting to 255 measurements.\n", GAUGEFLOWINFO -> nmeas ) ;
+    GAUGEFLOWINFO -> nmeas = 255;
+  }
+  // Pop all of the iteration counts into an array.
+  // Can't be more than 255.
+  {
+    const int meassteps_idx = tag_search( "MEASSTEPS" ) ;
+    if( type_idx == GLU_FAILURE ) { return tag_failure( " MEASSTEPS " ) ; }
+    // Use strtok to pull out integers.
+    char *pch;
+    char *endptr;
+    errno = 0;
+    int counter = 0 ; 
+    pch = strtok( INPUT[meassteps_idx].VALUE, " " ) ; 
+    while ( pch != NULL ) {
+      if ( counter+1 > GAUGEFLOWINFO -> nmeas || counter == 255 ) {
+        fprintf( stderr, "[IO] Too many measurement steps provided [%zu] "
+                          "Truncating additional measurements.\n", counter+1 ) ;
+        pch = NULL ;
+      } else {
+        GAUGEFLOWINFO -> nmeassteps[counter++] = (size_t)strtol( pch, &endptr , 10 ) ;
+        if ( endptr == INPUT[idx].VALUE || errno = ERANGE ) {
+          return GLU_FAILURE ; 
+        }
+        pch = strtok( NULL, " ") ;
+      }
+    }
+    if ( counter != GAUGEFLOWINFO -> nmeas ) {
+      fprintf( stderr, "[IO] Number of measurement steps not what was expected [%zu] "
+                       "Modifying nmeas appropriately.\n", counter ) ;
+      GAUGEFLOWINFO -> nmeas = counter;
+    }
+    // Set -1 delimiter.
+    GAUGEFLOWINFO -> nmeassteps[counter] = -1;
+  }
+  return GLU_SUCCESS ;
+}
+
 // are we performing a random transform?
 static GLU_bool
 rtrans( void )
@@ -586,6 +653,8 @@ get_input_data( struct infile_data *INFILE ,
   if( read_cuts_struct( &( INFILE -> CUTINFO ) ) == GLU_FAILURE ) INPUT_FAILS++ ;
 
   if( read_suNC_x_U1( &( INFILE -> U1INFO ) ) == GLU_FAILURE ) INPUT_FAILS++ ;
+
+  if( read_gaugeflow_struct( &( INFILE -> GAUGEFLOWINFO ) ) == GLU_FAILURE ) INPUT_FAILS++;
 
   if( smearing_info( &( INFILE -> SMINFO ) ) == GLU_FAILURE ) INPUT_FAILS++ ;
  
