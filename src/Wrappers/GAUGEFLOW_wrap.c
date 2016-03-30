@@ -29,6 +29,15 @@
 #include "Qsusc.h" // for the topological susceptibility correlator
 #include "SM_wrap.h"      // for the smearing wrapper
 
+// what're we writing?
+static GLU_bool
+gaugeflow( )
+{
+  fprintf( stdout , "[GAUGEFLOW] " ) ;
+  return GLU_TRUE ;
+}
+
+
 // wrapper for the various measurements we want done along the flow
 void
 GAUGEFLOW_wrap_struct( struct site *__restrict lat ,
@@ -74,6 +83,7 @@ GAUGEFLOW_wrap_struct( struct site *__restrict lat ,
   // What if the first time is zero?
   if ( sort_steps[counter] == 0)
   {
+    gaugeflow();
     printf("We would do a measurement at the start!\n");  
     counter++;
   }
@@ -93,7 +103,8 @@ GAUGEFLOW_wrap_struct( struct site *__restrict lat ,
     
     // Flow the amount we need to!
     SM_wrap_struct( lat , SMINFO_mod ) ;
-
+    
+    gaugeflow();
     printf("We would do a measurement at iter %zu, step %zu.\n", counter, sort_steps[counter]);
 
     counter++;
