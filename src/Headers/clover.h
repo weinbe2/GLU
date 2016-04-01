@@ -65,4 +65,24 @@ void
 compute_Gmunu_array( GLU_complex *__restrict qtop ,
 		     const struct site *__restrict lat ) ;
 
+
+/**
+   @fn void compute_Gmunu_array_both( double qtop_sum, double symmE_sum, 
+                                        GLU_complex *__restrict *__restrict qtop , GLU_complex *__restrict symmE , 
+					const struct site *__restrict lat )
+   @brief \f$ O(a^4) \f$ tree-improved field strength tensor from <a href="http://arxiv.org/abs/hep-lat/0203008"> paper </a>
+   @param qtop_sum :: qtop summed over the lattice
+   @param symmE_sum :: symmE symmed over the lattice
+   @param qtop :: Naive topological charge matrix
+   @param symmE :: Clover Yang-Mills action density matrix.
+   @param lat :: lattice field
+ */
+void
+compute_Gmunu_array_both( double *__restrict qtop_sum ,
+                     double *__restrict symmE_sum ,
+                     double *__restrict qtop , // an LVOLUME array for the qtop
+                     double *__restrict symmE ,     // an LVOLUME array for symmE
+                     const struct site *__restrict lat );
+
+
 #endif

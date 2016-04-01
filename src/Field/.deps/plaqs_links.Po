@@ -50,8 +50,8 @@ Field/plaqs_links.o: Field/plaqs_links.c /usr/include/stdc-predef.h \
  ../src/Headers/U_Nops.h ../src/Headers/trace_abc.h ../src/Headers/MMUL.h \
  ../src/Headers/MMUL_dag.h ../src/Headers/MMULdag.h \
  ../src/Headers/MMULdagdag.h ../src/Headers/exactQ.h \
- ../src/Headers/expMat.h ../src/Headers/GLU_malloc.h \
- ../src/Headers/clover.h /usr/lib/gcc/x86_64-linux-gnu/4.8/include/omp.h
+ ../src/Headers/expMat.h ../src/Headers/GLU_malloc.h Field/clover.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.8/include/omp.h
 
 /usr/include/stdc-predef.h:
 
@@ -201,6 +201,6 @@ Field/plaqs_links.o: Field/plaqs_links.c /usr/include/stdc-predef.h \
 
 ../src/Headers/GLU_malloc.h:
 
-../src/Headers/clover.h:
+Field/clover.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/4.8/include/omp.h:

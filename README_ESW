@@ -1,0 +1,1 @@
+./configure --prefix=/home/weinbe2/Documents/GLU/install --with-fftw=/home/weinbe2/bin/fftw/install/ --enable-OMP_FFTW  CC=gcc  CFLAGS="-Wall -O3 -ffast-math -fopenmp"

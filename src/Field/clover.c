@@ -1066,6 +1066,66 @@ compute_Gmunu_array( GLU_complex *__restrict qtop , // an LVOLUME array for the 
   return ;
 }
 
+// this is the driving code for the computation
+// Added by ESW
+void
+compute_Gmunu_array_both( double *__restrict qtop_sum , 
+                     double *__restrict symmE_sum ,
+		     double *__restrict qtop , // an LVOLUME array for the qtop
+		     double *__restrict symmE ,     // an LVOLUME array for symmE
+		     const struct site *__restrict lat )
+{
+  size_t i ;
+  // initialise the temporal and spatial plaq and the qtop
+  double plaq_sp = 0. , plaq_t = 0. , Q = 0. ;
+  const double QTOP_DENOM = -0.00158314349441152767881061661265;
+  const double SYMME_DENOM = 0.0625 / LVOLUME ; 
+  // control factors
+#ifndef NK5
+  fClover_k1 = fabs( Clover_k1 ) ;
+  fClover_k2 = fabs( Clover_k2 ) ;
+  fClover_k3 = fabs( Clover_k3 ) ;
+  fClover_k4 = fabs( Clover_k4 ) ;
+  fClover_k5 = fabs( k5 ) ;
+#endif
+
+#pragma omp parallel for private(i) reduction(+:plaq_sp) reduction(+:plaq_t) reduction(+:Q)
+  for( i = 0 ; i < LVOLUME ; i++ ) {
+    double plsp , plt , q ;
+    compute_Gmunu_kernel( &plt , &plsp , &q , lat ,
+			  i , 3 , 0 , 1 , 2  ) ;
+    plaq_sp = plaq_sp + plsp ;
+    plaq_t = plaq_t + plt ;
+    Q = Q + q ;
+    qtop[i] = q; 
+    symmE[i] = plsp + plt;
+    //
+    compute_Gmunu_kernel( &plt , &plsp , &q , lat ,
+			  i , 3 , 1 , 2 , 0  ) ;
+    plaq_sp = plaq_sp + plsp ;
+    plaq_t = plaq_t + plt ;
+    Q = Q + q ;
+    qtop[i] += q; 
+    symmE[i] += plsp + plt;
+    //
+    compute_Gmunu_kernel( &plt , &plsp , &q , lat ,
+			  i , 3 , 2 , 0 , 1  ) ;
+    plaq_sp = plaq_sp + plsp ;
+    plaq_t = plaq_t + plt ;
+    Q = Q + q ; 
+    qtop[i] += q; 
+    symmE[i] += plsp + plt;
+	
+    qtop[i] *= QTOP_DENOM;
+    symmE[i] *= SYMME_DENOM;
+
+  }
+  
+  *qtop_sum = Q*QTOP_DENOM;
+  *symmE_sum = (plaq_sp+plaq_t)*SYMME_DENOM;
+  return ;
+}
+
 // undefine all of the field defs
 #ifdef TRF_ANTIHERMITIAN
   #undef TRF_ANTIHERMITIAN

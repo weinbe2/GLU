@@ -50,11 +50,10 @@ Field/Qsusc.o: Field/Qsusc.c /usr/include/stdc-predef.h \
  ../src/Headers/U_Nops.h ../src/Headers/trace_abc.h ../src/Headers/MMUL.h \
  ../src/Headers/MMUL_dag.h ../src/Headers/MMULdag.h \
  ../src/Headers/MMULdagdag.h ../src/Headers/exactQ.h \
- ../src/Headers/expMat.h ../src/Headers/GLU_malloc.h \
- ../src/Headers/clover.h ../src/Headers/cut_output.h \
- ../src/Headers/cut_routines.h ../src/Headers/geometry.h \
- ../src/Headers/GLU_bswap.h ../src/Headers/plan_ffts.h \
- ../src/Headers/SM_wrap.h
+ ../src/Headers/expMat.h ../src/Headers/GLU_malloc.h Field/clover.h \
+ ../src/Headers/cut_output.h ../src/Headers/cut_routines.h \
+ ../src/Headers/geometry.h ../src/Headers/GLU_bswap.h \
+ ../src/Headers/plan_ffts.h ../src/Headers/SM_wrap.h
 
 /usr/include/stdc-predef.h:
 
@@ -204,7 +203,7 @@ Field/Qsusc.o: Field/Qsusc.c /usr/include/stdc-predef.h \
 
 ../src/Headers/GLU_malloc.h:
 
-../src/Headers/clover.h:
+Field/clover.h:
 
 ../src/Headers/cut_output.h:
 
