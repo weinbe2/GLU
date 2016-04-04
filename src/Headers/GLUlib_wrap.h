@@ -133,6 +133,7 @@ read_and_smear( const char *infile ,
    @param infile :: input configuration name
    @param rtrans :: do we want to randomly transform the initial configuration
    @param GAUGEFLOWINGO :: information about what measurement to perform at what wilson flow steps.
+   @param CUTINFO :: cutting information of the form #cut_info
    @param SMINFO :: smearing transformations can be used in smeared gauge fixing
    @return #GLU_SUCCESS or #GLU_FAILURE
  */
@@ -140,6 +141,7 @@ int
 read_and_gauge_flow( const char *infile, 
                      const GLU_bool rtrans ,
                      const struct gaugeflow_info GAUGEFLOWINFO , 
+                     const struct cut_info CUTINFO , 
                      const struct sm_info SMINFO );
 
 /**

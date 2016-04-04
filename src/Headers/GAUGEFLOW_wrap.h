@@ -35,6 +35,7 @@
 void
 GAUGEFLOW_wrap_struct( struct site *__restrict lat , 
 		       const struct gaugeflow_info GAUGEFLOWINFO ,
+                       const struct cut_info CUTINFO , 
 		       const struct sm_info SMINFO ) ;
 
 #endif

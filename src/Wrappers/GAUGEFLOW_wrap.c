@@ -23,8 +23,11 @@
  */
 
 #include "Mainfile.h"
+#include "clover.h"
 #include "GAUGEFLOW_wrap.h" // to declare the gaugeflow wrapper
+#include "geometry.h" // for the function get_vec_from_origin
 #include "GLU_timer.h" // for the timer
+#include "plan_ffts.h" // config space correlator is convolution
 #include "POLY.h" // for the static potential
 #include "Qsusc.h" // for the topological susceptibility correlator
 #include "SM_wrap.h"      // for the smearing wrapper
@@ -37,11 +40,125 @@ gaugeflow( )
   return GLU_TRUE ;
 }
 
+// Spit out symmE, Q to file.
+void
+gaugeflow_output_gauge( struct site *__restrict lat , 
+                        double flow_time , 
+                        const struct gaugeflow_info GAUGEFLOWINFO ,
+                        const struct cut_info CUTINFO )
+{
+#ifndef HAVE_FFTW3_H
+  fprintf( stderr , "[FFT] Need to have FFTW to get correlator.\n");
+  return ;
+#endif
+  
+  size_t i, j;
+  int site [ ND ];
+  char fout [ 256 ];
+
+  fftw_plan forward , backward ; 
+
+  // Set up outputs. 
+  double qtop_sum = 0.;
+  double symmE_sum = 0.;
+
+  double *qtop_real = malloc( LVOLUME * sizeof ( double ) ) ;
+  double *symmE_real = malloc( LVOLUME * sizeof ( double ) ) ;
+
+  GLU_complex *glue = malloc ( LVOLUME * sizeof ( GLU_complex ) ) ;
+
+  GLU_complex *glue_p = malloc ( LVOLUME * sizeof ( GLU_complex ) ) ;
+
+  // Get gluonic quantities.
+  compute_Gmunu_array_both( &qtop_sum, &symmE_sum, qtop_real, symmE_real, lat );
+
+  fprintf( stdout , "[GLUONIC] SymmE %.15e qtop %.15e \n", symmE_sum, qtop_sum ) ; 
+
+  // Init parallel threads.
+  if ( parallel_ffts() == GLU_FAILURE ) {
+    fprintf( stderr , "[PAR] Problem with initialising the OPENMP FFTW routines \n" ) ;
+    goto memfree;
+  }
+
+  small_create_plans_DFT( &forward, &backward, glue, glue_p, ND);
+
+  // Start doing FFTs!
+  if ( GAUGEFLOWINFO.type == GFLOW_ALL || GAUGEFLOWINFO.type == GFLOW_SYMME ) {
+    #pragma omp parallel for private(i)
+    PFOR( i = 0; i < LVOLUME ; i++ ) {
+      glue[i] = symmE_real[i];
+    }
+
+    fftw_execute( forward ) ; 
+    
+    // do the convolution.
+    #pragma omp parallel for private(i)
+    PFOR( i = 0; i < LVOLUME ; i++ ) {
+      glue_p[i] *= conj( glue_p[i] ) / (double)LVOLUME ; 
+    }
+
+    fftw_execute( backward );  
+
+    // print things to file
+    sprintf( fout , "%ssymmE_wflow_%.5f.dat", CUTINFO.where, flow_time );
+    FILE *outfile = fopen( fout, "w" ) ; 
+
+    for(i=0; i<LVOLUME; i++) {
+      get_vec_from_origin(site, i, ND);
+      for(j=0; j<ND; j++) {
+        fprintf( outfile, "%d ", site[j] );
+      }
+      fprintf( outfile, "%.15e\n", creal(glue[i]) );
+    }
+    fclose( outfile );
+  }
+
+
+  // Start doing FFTs!
+  if ( GAUGEFLOWINFO.type == GFLOW_ALL || GAUGEFLOWINFO.type == GFLOW_TOPO ) {
+    #pragma omp parallel for private(i)
+    PFOR( i = 0; i < LVOLUME ; i++ ) {
+      glue[i] = qtop_real[i];
+    }
+
+    fftw_execute( forward ) ; 
+    
+    // do the convolution.
+    #pragma omp parallel for private(i)
+    PFOR( i = 0; i < LVOLUME ; i++ ) {
+      glue_p[i] *= conj( glue_p[i] ) / (double)LVOLUME ; 
+    }
+
+    fftw_execute( backward );  
+
+    // print things to file
+    sprintf( fout , "%sqtop_wflow_%.5f.dat", CUTINFO.where, flow_time );
+    FILE *outfile = fopen( fout, "w" ) ; 
+
+    for(i=0; i<LVOLUME; i++) {
+      get_vec_from_origin(site, i, ND);
+      for(j=0; j<ND; j++) {
+        fprintf( outfile, "%d ", site[j] );
+      }
+      fprintf( outfile, "%.15e\n", creal(glue[i]) );
+    }
+    fclose( outfile );
+  }
+
+memfree:
+  free(qtop_real);
+  free(symmE_real);
+  free(glue);
+  free(glue_p);
+
+}
+
 
 // wrapper for the various measurements we want done along the flow
 void
 GAUGEFLOW_wrap_struct( struct site *__restrict lat ,
                        const struct gaugeflow_info GAUGEFLOWINFO ,
+                       const struct cut_info CUTINFO , 
                        const struct sm_info SMINFO )
 {
   size_t i, j;
@@ -49,6 +166,7 @@ GAUGEFLOW_wrap_struct( struct site *__restrict lat ,
   size_t total_iters;
   struct sm_info SMINFO_mod;
   size_t sort_steps[ 256 ];
+  int site [ ND ]; // to hold a 4-coordinate of a site.
   start_timer( ) ;
   
 
@@ -84,7 +202,10 @@ GAUGEFLOW_wrap_struct( struct site *__restrict lat ,
   if ( sort_steps[counter] == 0)
   {
     gaugeflow();
-    printf("We would do a measurement at the start!\n");  
+    printf("Doing a measurement at iter %zu, step %zu.\n", counter, sort_steps[counter]);
+
+    gaugeflow_output_gauge( lat , 0.0 , GAUGEFLOWINFO, CUTINFO );
+
     counter++;
   }
 
@@ -105,7 +226,9 @@ GAUGEFLOW_wrap_struct( struct site *__restrict lat ,
     SM_wrap_struct( lat , SMINFO_mod ) ;
     
     gaugeflow();
-    printf("We would do a measurement at iter %zu, step %zu.\n", counter, sort_steps[counter]);
+    printf("Doing a measurement at iter %zu, step %zu.\n", counter, sort_steps[counter]);
+
+    gaugeflow_output_gauge( lat , Latt.sm_alpha[0]*sort_steps[counter] , GAUGEFLOWINFO, CUTINFO );
 
     counter++;
   }

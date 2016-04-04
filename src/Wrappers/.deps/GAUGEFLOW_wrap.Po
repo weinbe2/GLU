@@ -52,8 +52,10 @@ Wrappers/GAUGEFLOW_wrap.o: Wrappers/GAUGEFLOW_wrap.c \
  ../src/Headers/MMUL_dag.h ../src/Headers/MMULdag.h \
  ../src/Headers/MMULdagdag.h ../src/Headers/exactQ.h \
  ../src/Headers/expMat.h ../src/Headers/GLU_malloc.h \
- ../src/Headers/GAUGEFLOW_wrap.h ../src/Headers/GLU_timer.h \
- ../src/Headers/POLY.h ../src/Headers/Qsusc.h ../src/Headers/SM_wrap.h
+ ../src/Headers/clover.h ../src/Headers/GAUGEFLOW_wrap.h \
+ ../src/Headers/geometry.h ../src/Headers/GLU_timer.h \
+ ../src/Headers/plan_ffts.h ../src/Headers/POLY.h ../src/Headers/Qsusc.h \
+ ../src/Headers/SM_wrap.h
 
 /usr/include/stdc-predef.h:
 
@@ -203,9 +205,15 @@ Wrappers/GAUGEFLOW_wrap.o: Wrappers/GAUGEFLOW_wrap.c \
 
 ../src/Headers/GLU_malloc.h:
 
+../src/Headers/clover.h:
+
 ../src/Headers/GAUGEFLOW_wrap.h:
 
+../src/Headers/geometry.h:
+
 ../src/Headers/GLU_timer.h:
+
+../src/Headers/plan_ffts.h:
 
 ../src/Headers/POLY.h:
 

@@ -264,6 +264,7 @@ int
 read_and_gauge_flow( const char *infile,
                      const GLU_bool rtrans ,
                      const struct gaugeflow_info GAUGEFLOWINFO ,
+                     const struct cut_info CUTINFO , 
                      const struct sm_info SMINFO )
 {
   // Only supports non-adaptive flow. 
@@ -278,7 +279,7 @@ read_and_gauge_flow( const char *infile,
   // should print out a warning
   if( lat == NULL ) return GLU_FAILURE ;
   
-  GAUGEFLOW_wrap_struct( lat , GAUGEFLOWINFO , SMINFO ) ;
+  GAUGEFLOW_wrap_struct( lat , GAUGEFLOWINFO , CUTINFO , SMINFO ) ;
 
   free( lat ) ;
   return GLU_SUCCESS ;

@@ -84,7 +84,7 @@ main( const int argc ,
 		 argv[ WRITE ] , INFILE.storage , INFILE.output_details ) ;
     break ;
   case MODE_GAUGE_FLOW :
-    read_and_gauge_flow( argv[ READ ], INFILE.rtrans, INFILE.GAUGEFLOWINFO, INFILE.SMINFO ) ;
+    read_and_gauge_flow( argv[ READ ], INFILE.rtrans, INFILE.GAUGEFLOWINFO, INFILE.CUTINFO , INFILE.SMINFO ) ;
     break ;
   default :
     read_and_check( argv[ READ ] , INFILE.rtrans , argv[ WRITE ] , 
