@@ -152,7 +152,7 @@ gaugeflow_output_gauge( struct site *__restrict lat ,
         {
             // as defined in src/Field/POLY.c
             polyloop[i] = poly_all( lat, i ) ; 
-            fprintf( stdout, " poly%zur %.15e poly%zui %.15e", i, creal(polyloop[i])/(3*LVOLUME), i, cimag(polyloop[i])/(3*LVOLUME));
+            fprintf( stdout, " poly%zur %.15e poly%zui %.15e", i, creal(polyloop[i])/(NC*LVOLUME), i, cimag(polyloop[i])/(NC*LVOLUME));
         }
         
         
