@@ -1,0 +1,2 @@
+./GLU_new -c wflow_cfg -i weakfld_8x16w0.01 -o weakfld_8x16w0.01_flow
+

@@ -1,1 +1,99 @@
+This is a heavy modification/hack of R.J. Hudspith's framework "GLU" to measure
+the symmE and symmQ full 4D correlator, without cuts, along the Wilson flow. The
+modification also measures the average polyakov loop in all 4 dimensions separately,
+real and imaginary parts. 
+
+To compile the code with OpenMP and FFTW support, I personally ran (after an automake,
+etc type deal):
+
 ./configure --prefix=/home/weinbe2/Documents/GLU/install --with-fftw=/home/weinbe2/bin/fftw/install/ --enable-OMP_FFTW  CC=gcc  CFLAGS="-Wall -O3 -ffast-math -fopenmp"
+make
+make install
+
+You'll want to replace the path after "--prefix=" with where you want GLU to be
+installed after running "make install". You'll also want to replace the path
+after "--with-fftw=" with the install directory for a version of FFTW.
+
+The only testing I've done has been with FFTW active and with OpenMP support
+turned on. I haven't even checked if the unit testing still works with the
+modifications I've done! I should talk to Jamie about this, but one thing
+at a time.
+
+I've included a few useful sample files in the directory 'reference_esw'. One
+is an up-to-date example configure file, 'wflow_cfg'. (Since the reference files
+that otherwise come with GLU won't work anymore, nor will the ones GLU will
+generate for you... more to-do's!)
+
+All of the lines in 'wflow_cfg' need to be there, but only a few need to be
+modified or need mention. They are:
+
+1) MODE = GAUGEFLOW
+
+This specifies the mode "gauge measurements along wilson flow".
+
+22)  OUTPUT = ./
+
+This specifies what directory to save the 4D correlator outputs to, as well as
+possibly a prefix to each output. For example, you could write:
+
+OUTPUT = ./cfg300
+
+And then each output would go to the working directory, with the prefix "cfg300"
+on the filename. 
+
+23) SMEARTYPE = WFLOW_STOUT
+
+This specifies using the non-adaptive stout link Wilson flow. Other versions 
+built into GLU may work... I just never tried them. So stick with this!
+
+25) SMITERS = 10
+
+How many Wilson flow steps to do in total. 
+
+26) ALPHA1 = 0.01
+
+This specifies the Wilson flow step size to use.
+
+29) GAUGEFLOWTYPE = ALL
+30) NMEAS = 3
+31) MEASSTEPS = 0,2,4
+
+This is where the magic happens. Line 29 specifies "ALL", which means do the 
+symmE, symmQ correlators, as well as the Polyakov loop. You can change it to
+just measure one of those... but why bother?
+
+Line 30 specifies how many Wilson flow steps to do the measurements on. The 
+number here should agree with the number of comma-separated steps on the next
+line.
+
+Line 31 specifies a comma-delimited list of Wilson flow steps to perform 
+measurements at. The current set up, "0,2,4", means to do the symmE, symmQ,
+and Polyakov loop measurements on the original gauge fields, after doing
+two steps of Wilson flow, and after doing four steps of Wilson flow.
+
+I think we should look into doing measurements at fixed percentages of the
+number of steps required for symmE to hit the Wilson flow scale \sqrt{8t_0},
+but that's just me. 
+
+36) STORAGE = SCIDAC
+
+Change this if necessary, shouldn't be though!
+
+------
+
+That's all. To do a series of configurations, I'd make a separate copy of the
+"wflow_cfg" file with the appropriate changes (likely to "OUTPUT") for each
+configuration. Each ensemble on its own will need other properties changed, of
+course. 
+
+To call GLU, I included a reference command in the file "reference_command":
+
+./GLU -c wflow_cfg -i weakfld_8x16w0.01 -o weakfld_8x16w0.01_flow
+
+In this case, the filename after "-c" should be the configuration file, the
+filename after "-i" should be the file name (appropriately ln -s'd to be in
+the running directory, I imagine). The filename after -o doesn't matter for
+the GAUGEFLOW measurements because those measurements don't save the gauge
+field.
+
+
