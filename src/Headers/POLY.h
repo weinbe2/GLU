@@ -51,4 +51,19 @@ double complex
 poly( const struct site *__restrict lat , 
       int dir ) ;
 
+/**
+   @fn double complex poly_all( const struct site *__restrict lat , int dir )
+   @brief computes the polyakov loop in the direction "dir"
+   @param lat :: lattice fields
+   @param dir :: direction to measure in
+   The measurement starts at the logical first sub-hypercube and traverses in
+   the direction "dir" taking the product of the matrices from that point.
+
+   @warning prints results to stdout. changes dir if not suitable
+ **/
+double complex 
+poly_all( const struct site *__restrict lat , 
+      int dir ) ;
+
+
 #endif

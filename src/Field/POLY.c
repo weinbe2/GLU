@@ -75,6 +75,29 @@ poly( const struct site *__restrict lat ,
   return sum ;
 }
 
+// computes a polyakov line, looping around the dimension "dir", over all volume.
+double complex
+poly_all( const struct site *__restrict lat , 
+      size_t dir )
+{
+  // if you have stupidly set the dimension to something unreasonable
+  // default the direction to ND
+  if( dir > ND ) { dir = ND ; }
+  double complex sum = 0 ;
+  size_t i ; 
+#pragma omp parallel for private(i) reduction(+:sum)
+  for( i = 0 ; i < LVOLUME ; i++ ) {
+    GLU_complex poly[ NCNC ] ;
+    // use the correct site for one of the hypercubes ...
+    //int x[ ND ] ;
+    //get_mom_2piBZ( x , i , dir ) ;
+    //const size_t k = gen_site( x ) ;
+    small_poly( poly , lat , i , dir , Latt.dims[dir] ) ;
+    sum = sum + (double complex)trace( poly ) ;
+  }
+  return sum ;
+}
+
 // If we have FFTW we use it for the convolutions instead of our slow
 // method, which is slow but equivalent
 #ifdef HAVE_FFTW3_H

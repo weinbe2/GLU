@@ -54,6 +54,7 @@ gaugeflow_output_gauge( struct site *__restrict lat ,
   
   size_t i, j;
   int site [ ND ];
+  double complex polyloop [ ND ]; // holds the polyakov loop. 
   char fout [ 256 ];
 
   fftw_plan forward , backward ; 
@@ -72,7 +73,7 @@ gaugeflow_output_gauge( struct site *__restrict lat ,
   // Get gluonic quantities.
   compute_Gmunu_array_both( &qtop_sum, &symmE_sum, qtop_real, symmE_real, lat );
 
-  fprintf( stdout , "[GLUONIC] SymmE %.15e qtop %.15e \n", symmE_sum, qtop_sum ) ; 
+  fprintf( stdout , "[GLUONIC] t %.15e SymmE %.15e qtop %.15e \n", flow_time, symmE_sum, qtop_sum ) ; 
 
   // Init parallel threads.
   if ( parallel_ffts() == GLU_FAILURE ) {
@@ -144,6 +145,19 @@ gaugeflow_output_gauge( struct site *__restrict lat ,
     }
     fclose( outfile );
   }
+    
+    if ( GAUGEFLOWINFO.type == GFLOW_ALL || GAUGEFLOWINFO.type == GFLOW_POLYAKOV) {
+        fprintf( stdout, "[GLUONIC] t %.15e", flow_time);
+        for ( i = 0; i < ND; i++ )
+        {
+            // as defined in src/Field/POLY.c
+            polyloop[i] = poly_all( lat, i ) ; 
+            fprintf( stdout, " poly%zur %.15e poly%zui %.15e", i, creal(polyloop[i])/(3*LVOLUME), i, cimag(polyloop[i])/(3*LVOLUME));
+        }
+        
+        
+        fprintf( stdout, "\n"); 
+    }
 
 memfree:
   free(qtop_real);
@@ -166,7 +180,6 @@ GAUGEFLOW_wrap_struct( struct site *__restrict lat ,
   size_t total_iters;
   struct sm_info SMINFO_mod;
   size_t sort_steps[ 256 ];
-  int site [ ND ]; // to hold a 4-coordinate of a site.
   start_timer( ) ;
   
 
